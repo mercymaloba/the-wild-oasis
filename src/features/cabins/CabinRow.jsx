@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
 
