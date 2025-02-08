@@ -15,7 +15,10 @@ function Cabins() {
 
       <Row>
         <CabinTable />
-        <Button onClick={() => setShowForm((show) => !show)}>
+        <Button
+          onClick={() => setShowForm((show) => !show)}
+          style={{ marginTop: "2%", width: "100%", marginBottom: "2%" }}
+        >
           Add new cabin
         </Button>
         {showForm && <CreateCabinForm />}
