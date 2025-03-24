@@ -7,7 +7,7 @@ export function useBookings() {
 
   const filterValue = searchParams.get("status");
   const filter =
-    !filterValue || filter === "all"
+    !filterValue || filterValue === "all"
       ? null
       : { field: "status", value: filterValue };
   // : { field: "totalPrice", value: 5000, method: "gte" };
