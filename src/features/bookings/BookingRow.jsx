@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import styled from "styled-components";
-import { format, isToday } from "date-fns";
+import { format, isToday, parseISO } from "date-fns";
 
 import Tag from "../../ui/Tag";
 import Table from "../../ui/Table";
@@ -46,15 +46,22 @@ function BookingRow({
     numGuests,
     totalPrice,
     status,
-    guests: { fullName: guestName, email },
-    cabins: { name: cabinName },
+    guests,
+    cabins,
   },
 }) {
+  const guestName = guests?.fullName ?? "Unknown Guest";
+  const email = guests?.email ?? "No email";
+  const cabinName = cabins?.name ?? "Unknown Cabin";
   const statusToTagName = {
     unconfirmed: "blue",
     "checked-in": "green",
     "checked-out": "silver",
   };
+
+  // Ensure dates are parsed safely
+  const parsedStartDate = startDate ? parseISO(startDate) : null;
+  const parsedEndDate = endDate ? parseISO(endDate) : null;
 
   return (
     <Table.Row>
@@ -67,18 +74,26 @@ function BookingRow({
 
       <Stacked>
         <span>
-          {isToday(new Date(startDate))
-            ? "Today"
-            : formatDistanceFromNow(startDate)}{" "}
+          {parsedStartDate
+            ? isToday(parsedStartDate)
+              ? "Today"
+              : formatDistanceFromNow(startDate)
+            : "Unknown Date"}{" "}
           &rarr; {numNights} night stay
         </span>
         <span>
-          {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
-          {format(new Date(endDate), "MMM dd yyyy")}
+          {parsedStartDate && parsedEndDate
+            ? `${format(parsedStartDate, "MMM dd yyyy")} — ${format(
+                parsedEndDate,
+                "MMM dd yyyy"
+              )}`
+            : "Invalid Dates"}
         </span>
       </Stacked>
 
-      <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
+      <Tag type={statusToTagName[status] ?? "gray"}>
+        {status ? status.replace("-", " ") : "Unknown Status"}
+      </Tag>
 
       <Amount>{formatCurrency(totalPrice)}</Amount>
     </Table.Row>
